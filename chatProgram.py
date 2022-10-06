@@ -1,13 +1,13 @@
-from driver import receiveFrom, broadcastCharacters
+from driver import receive_from, broadcast_characters
 
 username = input("Choose a username: ")
 print("You may now type in chat!")
 
-broadcastCharacters([1,2,3,4], username + " has joined the chat")
+broadcast_characters([1,2,3,4], username + " has joined the chat")
 
-receiveFrom([1,2,3,4])
+receive_from([1,2,3,4])
 
 while True:
     message = input("")
     totalMessage = "[" + username + "]: " + message
-    broadcastCharacters([1,2,3,4], totalMessage)
+    broadcast_characters([1,2,3,4], totalMessage)

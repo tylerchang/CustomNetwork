@@ -1,33 +1,33 @@
 from sender import transmit_message
-from receiver import listenForData
-from convertUtility import bytesToMessage, messageToBytes
-from dataProcessor import processData
+from receiver import listen_for_data
+from convertUtility import bytes_to_message, message_to_bytes
+from dataProcessor import process_data
 from multiprocessing import Process, Queue
 
 def listen(port, data):
-    listenForData(port, data)
+    listen_for_data(port, data)
 
 def broadcast(message, ports):
     transmit_message(message, ports)
 
-def receiveFrom(ports):
+def receive_from(ports):
     data = Queue()
 
-    createQueueThread(data)
+    create_queue_thread(data)
 
     for port in ports:
         thread = Process(target=listen, args=(port, data))
         thread.start()
 
-def broadcastTo(ports, message):
+def broadcast_to(ports, message):
     b1 = Process(target=broadcast, args=(message, ports))
     b1.start()
 
-def broadcastCharacters(ports, characterMessage):
-    convertedBytes = bytesToMessage(characterMessage)
-    b1 = Process(target=broadcast, args=(convertedBytes, ports))
+def broadcast_characters(ports, character_message):
+    converted_bytes = bytes_to_message(character_message)
+    b1 = Process(target=broadcast, args=(converted_bytes, ports))
     b1.start()
 
-def createQueueThread(queue):
-    queueThread = Process(target=processData, args=(queue,))
-    queueThread.start()
+def create_queue_thread(queue):
+    queue_thread = Process(target=process_data, args=(queue,))
+    queue_thread.start()

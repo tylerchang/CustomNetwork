@@ -1,11 +1,11 @@
-from convertUtility import bytesToMessage
+from convertUtility import bytes_to_message
 
-def processChat(message):
-     print(bytesToMessage(message))
+def process_chat(message):
+     print(bytes_to_message(message))
 
-def processData(queue):
+def process_data(queue):
      while True:
           length = queue.qsize()
           if length == 0:
                continue
-          processChat(queue.get())
+          process_chat(queue.get())

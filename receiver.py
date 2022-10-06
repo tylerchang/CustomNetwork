@@ -1,8 +1,5 @@
 import pigpio
 import time
-from convertUtility import bytesToMessage
-from dataProcessor import processChat
-from constants import CLOCKSPEED, BIT_STUFF_RUN_LENGTH
 import constants
 
 switch_time = None
@@ -11,15 +8,15 @@ def switch_callback(a, b, c):
     global switch_time
     switch_time = time.time()
 
-def sleepCorrection():
+def sleep_correction():
     if switch_time is None:
-        time.sleep(CLOCKSPEED)
+        time.sleep(constants.CLOCKSPEED)
     else:
         difference = time.time() - switch_time
-        if difference <= CLOCKSPEED:
-            time.sleep(CLOCKSPEED + (CLOCKSPEED / 2 - difference))
+        if difference <= constants.CLOCKSPEED:
+            time.sleep(constants.CLOCKSPEED + (constants.CLOCKSPEED / 2 - difference))
         else:
-            time.sleep(CLOCKSPEED)
+            time.sleep(constants.CLOCKSPEED)
 
 def listen(pi, GPIO_RECEIVER_NUMBER, data):
 
@@ -29,22 +26,22 @@ def listen(pi, GPIO_RECEIVER_NUMBER, data):
 
     message_buffer = ""
 
-    runValue = None
+    run_value = None
 
-    runLength = 0
+    run_length = 0
 
     while True:
         bit = str(pi.read(GPIO_RECEIVER_NUMBER))
 
-        if (runLength == BIT_STUFF_RUN_LENGTH):
-            runLength = 1
-            runValue = bit
-            sleepCorrection()
+        if (run_length == constants.BIT_STUFF_RUN_LENGTH):
+            run_length = 1
+            run_value = bit
+            sleep_correction()
             continue
 
-        runLength = (runLength + 1) if (bit == runValue) else 1
+        run_length = (run_length + 1) if (bit == run_value) else 1
 
-        runValue = bit
+        run_value = bit
 
         if state == "readingStart":
             if len(buffer) >= len(constants.START_SEQUENCE):
@@ -71,9 +68,9 @@ def listen(pi, GPIO_RECEIVER_NUMBER, data):
                 message_buffer = message_buffer[:-1 * len(constants.STOP_SEQUENCE)]
                 data.put(message_buffer)
                 message_buffer = ""
-        sleepCorrection()
+        sleep_correction()
 
-def listenForData(port, data):
+def listen_for_data(port, data):
 
     GPIO_RECEIVER_NUMBER = constants.GPIO_RECEIVER_NUMBER(port)
 
