@@ -31,6 +31,5 @@ def transmit_message(message, ports):
 
     pi = pigpio.pi()
     sequence = wake + constants.START_SEQUENCE + message + constants.STOP_SEQUENCE
-    print(message)
     bit_stuffed_sequence = add_bit_stuffing(sequence, constants.BIT_STUFF_RUN_LENGTH)
     send_sequence(pi, bit_stuffed_sequence, GPIO_TRANSMITTER_NUMBERS)

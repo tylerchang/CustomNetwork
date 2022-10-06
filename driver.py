@@ -8,7 +8,7 @@ def listen(port, data):
     listenForData(port, data)
 
 def broadcast(message, ports):
-    transmit_message(messageToBytes(message), ports)
+    transmit_message(message, ports)
 
 def receiveFrom(ports):
     data = Queue()
@@ -21,6 +21,11 @@ def receiveFrom(ports):
 
 def broadcastTo(ports, message):
     b1 = Process(target=broadcast, args=(message, ports))
+    b1.start()
+
+def broadcastCharacters(ports, characterMessage):
+    convertedBytes = bytesToMessage(characterMessage)
+    b1 = Process(target=broadcast, args=(convertedBytes, ports))
     b1.start()
 
 def createQueueThread(queue):

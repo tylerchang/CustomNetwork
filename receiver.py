@@ -47,7 +47,6 @@ def listen(pi, GPIO_RECEIVER_NUMBER, data):
         runValue = bit
 
         if state == "readingStart":
-            #print(buffer)
             if len(buffer) >= len(constants.START_SEQUENCE):
                 buffer = buffer[1:]
 

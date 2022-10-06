@@ -5,4 +5,3 @@ def messageToBytes(message):
 def bytesToMessage(byte):
 
     return ''.join(chr(int(''.join(x), 2)) for x in zip(*[iter(byte)]*8))
-

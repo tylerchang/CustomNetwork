@@ -1,7 +1,7 @@
 from convertUtility import bytesToMessage
 
 def processChat(message):
-     print("\n" + bytesToMessage(message))
+     print(bytesToMessage(message))
 
 def processData(queue):
      while True:
