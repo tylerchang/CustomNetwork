@@ -68,6 +68,8 @@ def broadcast_to(ports, message):
 
 def broadcast_characters(ports, character_message):
     global sender_queue
-    converted_bytes = bytes_to_message(character_message)
+    if sender_queue is None:
+        create_sender_queue()
+    converted_bytes = message_to_bytes(character_message)
     sender_queue.put((converted_bytes, ports))
 
