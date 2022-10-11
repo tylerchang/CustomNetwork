@@ -64,6 +64,8 @@ def receive_from(ports):
 
 def broadcast_to(ports, message):
     global sender_queue
+    if sender_queue is None:
+        create_sender_queue()
     sender_queue.put((message, ports))
 
 def broadcast_characters(ports, character_message):
