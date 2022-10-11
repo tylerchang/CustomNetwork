@@ -1,6 +1,7 @@
 import pigpio
 import time
 import constants
+from convertUtility import bytes_to_message
 
 switch_time = None
 
@@ -79,6 +80,8 @@ def wave_listen(pi, GPIO_RECEIVER_NUMBER, data):
     pigpio.exceptions = True
     pi.bb_serial_read_open(GPIO_RECEIVER_NUMBER, constants.BIT_RATE)
 
+    buffer = ""
+
     while True:
         edge = pi.wait_for_edge(GPIO_RECEIVER_NUMBER, pigpio.EITHER_EDGE)
 
@@ -86,7 +89,12 @@ def wave_listen(pi, GPIO_RECEIVER_NUMBER, data):
             c, raw_data = pi.bb_serial_read(GPIO_RECEIVER_NUMBER)
 
             if c > 0:
-                print(raw_data)
+                buffer += str(raw_data)[12:-2]
+            
+            if bytes_to_message(buffer)[-4:] == "stop":
+                data.put(buffer[:-32])
+                buffer = ""
+            
 
 def listen_for_data(port, data):
     GPIO_RECEIVER_NUMBER = constants.GPIO_RECEIVER_NUMBER(port)

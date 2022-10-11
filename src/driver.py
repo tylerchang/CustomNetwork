@@ -3,6 +3,7 @@ from receiver import listen_for_data
 from convertUtility import bytes_to_message, message_to_bytes
 from dataProcessor import process_data
 from multiprocessing import Process, Queue, Array
+import constants
 
 busy_ports = Array('b', (False, False, False, False))
 sender_queue = None
@@ -72,6 +73,9 @@ def broadcast_characters(ports, character_message):
     global sender_queue
     if sender_queue is None:
         create_sender_queue()
-    converted_bytes = message_to_bytes(character_message)
+    total_message = character_message
+    if (constants.LINK_MODE == "WAVE"):
+        total_message += "stop"
+    converted_bytes = message_to_bytes(total_message)
     sender_queue.put((converted_bytes, ports))
 

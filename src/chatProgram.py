@@ -8,4 +8,5 @@ receive_from([1,2,3,4])
 while True:
     message = input("")
     totalMessage = "[" + username + "]: " + message
+
     broadcast_characters([1,2,3,4], totalMessage)
