@@ -70,12 +70,32 @@ def listen(pi, GPIO_RECEIVER_NUMBER, data):
                 message_buffer = ""
         sleep_correction()
 
-def listen_for_data(port, data):
+def wave_listen(pi, GPIO_RECEIVER_NUMBER, data):
+    pi.set_mode(GPIO_RECEIVER_NUMBER, pigpio.INPUT)
 
+    pigpio.exceptions = False
+    pi.bb_serial_read_close(GPIO_RECEIVER_NUMBER)
+
+    pigpio.exceptions = True
+    pi.bb_serial_read_open(GPIO_RECEIVER_NUMBER, constants.BIT_RATE)
+
+    while True:
+        edge = pi.wait_for_edge(GPIO_RECEIVER_NUMBER, pigpio.EITHER_EDGE)
+
+        if edge:
+            c, raw_data = pi.bb_serial_read(GPIO_RECEIVER_NUMBER)
+
+            if c > 0:
+                print(raw_data)
+
+def listen_for_data(port, data):
     GPIO_RECEIVER_NUMBER = constants.GPIO_RECEIVER_NUMBER(port)
 
     pi = pigpio.pi()
 
-    pi.callback(GPIO_RECEIVER_NUMBER, pigpio.EITHER_EDGE, switch_callback)
+    if constants.LINK_MODE == "WAVE":
+        wave_listen(pi, GPIO_RECEIVER_NUMBER, data)
+    else:
+        pi.callback(GPIO_RECEIVER_NUMBER, pigpio.EITHER_EDGE, switch_callback)
 
-    listen(pi, GPIO_RECEIVER_NUMBER, data)
+        listen(pi, GPIO_RECEIVER_NUMBER, data)

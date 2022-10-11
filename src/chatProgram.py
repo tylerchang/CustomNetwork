@@ -3,8 +3,6 @@ from driver import receive_from, broadcast_characters
 username = input("Choose a username: ")
 print("You may now type in chat!")
 
-broadcast_characters([1,2,3,4], username + " has joined the chat")
-
 receive_from([1,2,3,4])
 
 while True:
