@@ -1,13 +1,14 @@
+from CustomNetwork.src.convertUtility import convert_dictionary_to_bytes
 from sender import transmit_message
 from receiver import listen_for_data
 from convertUtility import bytes_to_message, message_to_bytes
 from dataProcessor import process_data
 from multiprocessing import Process, Queue, Array
 import constants
-from networkProcess import update_table
 
 busy_ports = Array('b', (False, False, False, False))
 sender_queue = None
+receiver_queue = None
 
 def listen(port, data):
     listen_for_data(port, data)
@@ -44,8 +45,10 @@ def handle_sender_queue(queue):
             b1 = Process(target=broadcast, args=(message, ports))
             b1.start()
 
-def create_receiver_queue(queue):
-    queue_thread = Process(target=process_data, args=(queue,))
+def create_receiver_queue(table):
+    global receiver_queue
+    receiver_queue = Queue()
+    queue_thread = Process(target=process_data, args=(receiver_queue,table))
     queue_thread.start()
 
 
@@ -56,33 +59,21 @@ def create_sender_queue():
     queue_thread.start()
 
 def receive_from(ports):
-    data = Queue()
-
-    create_receiver_queue(data)
-
     for port in ports:
-        thread = Process(target=listen, args=(port, data))
+        thread = Process(target=listen, args=(port, receiver_queue))
         thread.start()
 
 def broadcast_to(ports, message):
     global sender_queue
-    if sender_queue is None:
-        create_sender_queue()
     total_message = message
     if (constants.LINK_MODE == "WAVE"):
-        total_message += "stop"
+        total_message += message_to_bytes("stop")
     sender_queue.put((message, ports))
 
 def broadcast_characters(ports, character_message):
     global sender_queue
-    if sender_queue is None:
-        create_sender_queue()
     total_message = character_message
     if (constants.LINK_MODE == "WAVE"):
         total_message += "stop"
     converted_bytes = message_to_bytes(total_message)
     sender_queue.put((converted_bytes, ports))
-
-def start_table_update_process(table):
-    update_table_process = Process(target=update_table, args=(table,))
-    update_table_process.start()

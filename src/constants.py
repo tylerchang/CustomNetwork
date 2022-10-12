@@ -17,3 +17,5 @@ HEADER_LENGTH = len(TABLE_HEADER)
 GPIO_TRANSMITTER_NUMBER = lambda port: 27 - (2 * (port - 1))
 
 GPIO_RECEIVER_NUMBER = lambda port : 26 - (2 * (port - 1))
+
+UPDATE_TABLE_INTERVAL = 15

@@ -8,7 +8,7 @@ def bytes_to_message(byte):
     return ''.join(chr(int(''.join(x), 2)) for x in zip(*[iter(byte)]*8))
 
 def convert_dictionary_to_bytes(distanceVector):
-    encodedDictionary = json.dumps(distanceVector)
+    encodedDictionary = json.dumps(dict(distanceVector))
     return message_to_bytes(encodedDictionary)
     
 def convert_bytes_to_dictionary(table):
