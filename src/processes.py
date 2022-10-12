@@ -16,7 +16,7 @@ def listen(port, data):
 def broadcast(message, ports):
     for port in ports:
         if not busy_ports[port - 1]:
-            busy_ports[port - 1]
+            busy_ports[port - 1] = True
 
     transmit_message(message, ports)
 

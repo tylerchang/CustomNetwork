@@ -4,6 +4,12 @@ import constants
 from processes import broadcast_to, create_receiver_queue, create_sender_queue, receive_from
 from convertUtility import convert_dictionary_to_bytes
 
+def update_neighbors(table):
+    while True:
+        broadcast_to([1,2,3,4], constants.TABLE_HEADER + convert_dictionary_to_bytes(table))
+
+        time.sleep(constants.UPDATE_TABLE_INTERVAL)
+
 def drive_network():
     node_name = input("Create a name for this node: ")
 
@@ -20,13 +26,6 @@ def drive_network():
         update_process = Process(target=update_neighbors, args=(table,))
 
         update_process.start()
-
-
-def update_neighbors(table):
-    while True:
-        broadcast_to([1,2,3,4], constants.TABLE_HEADER + convert_dictionary_to_bytes(table))
-
-        time.sleep(constants.UPDATE_TABLE_INTERVAL)
 
 if __name__ == '__main__':
     drive_network()
