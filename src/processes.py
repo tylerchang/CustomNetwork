@@ -4,6 +4,7 @@ from convertUtility import bytes_to_message, message_to_bytes
 from dataProcessor import process_data
 from multiprocessing import Process, Queue, Array
 import constants
+from networkProcess import update_table
 
 busy_ports = Array('b', (False, False, False, False))
 sender_queue = None
@@ -67,6 +68,9 @@ def broadcast_to(ports, message):
     global sender_queue
     if sender_queue is None:
         create_sender_queue()
+    total_message = message
+    if (constants.LINK_MODE == "WAVE"):
+        total_message += "stop"
     sender_queue.put((message, ports))
 
 def broadcast_characters(ports, character_message):
@@ -79,3 +83,6 @@ def broadcast_characters(ports, character_message):
     converted_bytes = message_to_bytes(total_message)
     sender_queue.put((converted_bytes, ports))
 
+def start_table_update_process(table):
+    update_table_process = Process(target=update_table, args=(table,))
+    update_table_process.start()

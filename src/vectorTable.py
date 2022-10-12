@@ -1,4 +1,4 @@
-class distanceVector:
+class vectorTable:
     table = None
     def __init__(self, current_node_name):
         # initializes current node with a distance of 0 on the vector
@@ -18,11 +18,11 @@ class distanceVector:
             print(node_name + " not in table")
         else:
             self.table.pop(node_name, None)
-    def get_vector(self):
+    def get_table(self):
         return self.table
     def print_table(self):
-        for key in self.tables:
-            print("Node: " + key + ", Distance: " + self.tables[key])
+        for key in self.table:
+            print("Node: " + key + ", Distance: " + str(self.table[key]))
     
 
 
