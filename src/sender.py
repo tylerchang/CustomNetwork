@@ -28,6 +28,7 @@ def add_bit_stuffing(message, n):
     return answer
 
 def wave_send(pi, message, GPIO_TRANSMITTER_NUMBERS):
+
         for number in GPIO_TRANSMITTER_NUMBERS:
             pi.set_mode(number, pigpio.OUTPUT)
 
@@ -36,11 +37,10 @@ def wave_send(pi, message, GPIO_TRANSMITTER_NUMBERS):
 
         for number in GPIO_TRANSMITTER_NUMBERS:
             pi.wave_add_serial(number, constants.BIT_RATE, message)
-    
         wave_output = pi.wave_create()
 
         pi.wave_send_once(wave_output)
-            
+
 def transmit_message(message, ports):
     GPIO_TRANSMITTER_NUMBERS = [constants.GPIO_TRANSMITTER_NUMBER(port) for port in ports]
 

@@ -90,11 +90,12 @@ def wave_listen(pi, GPIO_RECEIVER_NUMBER, data):
 
             if c > 0:
                 buffer += str(raw_data)[12:-2]
-            
-            if bytes_to_message(buffer)[-4:] == "stop":
-                data.put(buffer[:-32])
-                buffer = ""
-            
+
+            if constants.STOP_SEQUENCE in buffer:
+                index = buffer.index(constants.STOP_SEQUENCE)
+                message = buffer[:index]
+                buffer = buffer[index + len(constants.STOP_SEQUENCE):]
+                data.put(message)     
 
 def listen_for_data(port, data):
     GPIO_RECEIVER_NUMBER = constants.GPIO_RECEIVER_NUMBER(port)

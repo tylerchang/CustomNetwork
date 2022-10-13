@@ -12,6 +12,9 @@ def convert_dictionary_to_bytes(distanceVector):
     return message_to_bytes(encodedDictionary)
     
 def convert_bytes_to_dictionary(table):
-    dict_string = bytes_to_message(table)
-    res_dict = json.loads(dict_string)
-    return res_dict
+    try:
+        dict_string = bytes_to_message(table)
+        res_dict = json.loads(dict_string)
+        return res_dict
+    except:
+        return None

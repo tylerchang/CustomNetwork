@@ -1,4 +1,4 @@
-from CustomNetwork.src.convertUtility import convert_dictionary_to_bytes
+from convertUtility import convert_dictionary_to_bytes
 from sender import transmit_message
 from receiver import listen_for_data
 from convertUtility import bytes_to_message, message_to_bytes
@@ -67,13 +67,13 @@ def broadcast_to(ports, message):
     global sender_queue
     total_message = message
     if (constants.LINK_MODE == "WAVE"):
-        total_message += message_to_bytes("stop")
-    sender_queue.put((message, ports))
+        total_message += constants.STOP_SEQUENCE
+    sender_queue.put((total_message, ports))
 
 def broadcast_characters(ports, character_message):
     global sender_queue
     total_message = character_message
-    if (constants.LINK_MODE == "WAVE"):
-        total_message += "stop"
     converted_bytes = message_to_bytes(total_message)
+    if (constants.LINK_MODE == "WAVE"):
+        converted_bytes += constants.STOP_SEQUENCE
     sender_queue.put((converted_bytes, ports))

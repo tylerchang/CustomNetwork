@@ -6,10 +6,15 @@ def process_chat(message):
 
 def process_table_update(table, table_update):
      neighbor_table = convert_bytes_to_dictionary(table_update)
-
-     for key in table:
-          if key in neighbor_table:
+     if neighbor_table is None:
+         return
+     for key in neighbor_table:
+          if key in table:
                table[key] = min(table[key], 1 + neighbor_table[key])
+          else:
+               table[key] = 1 + neighbor_table[key]
+
+     print(dict(table))
      
 def process_data(queue, table):
      while True:
@@ -20,8 +25,8 @@ def process_data(queue, table):
           #process_chat(queue.get())
 
           bit_message = queue.get()
-
+          print(bit_message)
           header = bit_message[:constants.HEADER_LENGTH]
-
           if (header == constants.TABLE_HEADER):
+               print("received table update")
                process_table_update(table, bit_message[constants.HEADER_LENGTH:])

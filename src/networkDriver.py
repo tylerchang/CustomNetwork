@@ -26,6 +26,7 @@ def drive_network():
         update_process = Process(target=update_neighbors, args=(table,))
 
         update_process.start()
+        update_process.join()
 
 if __name__ == '__main__':
     drive_network()
